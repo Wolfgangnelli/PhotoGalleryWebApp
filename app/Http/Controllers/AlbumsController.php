@@ -23,7 +23,7 @@ class AlbumsController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+     
     }
 
     /**
@@ -46,7 +46,6 @@ class AlbumsController extends Controller
             $queryBuilder->where('album_name', 'like', $request->input('album_name') . '%');
         }
         $albums = $queryBuilder->paginate(env('ALBUM_PER_PAGE'));
-        //  dd($albums);
 
         return view('albums.albums', ['albums' => $albums]);
     }
@@ -63,7 +62,6 @@ class AlbumsController extends Controller
         $disk = config('filesystems.default');
         $thumbNail = $album->album_thumb;
 
-        //$res = Album::where('id', $id)->delete();
         $res = $album->delete();
         if ($res) {
             if ($thumbNail && Storage::disk($disk)->exists($thumbNail)) {
@@ -91,10 +89,7 @@ class AlbumsController extends Controller
     {
         $album = Album::find($id);
         $this->authorize($album);
-        /* 
-        if (Gate::denies('manage-album', $album)) {
-            abort(401, 'Unauthorized');
-        } */
+ 
         $categories = AlbumCategory::get();
         $selectedCategories = $album->categories->pluck('id')->toArray();
 
@@ -115,16 +110,9 @@ class AlbumsController extends Controller
         $data = $req->only(['name', 'description']);
         $data['id'] = $id;
 
-        /*  $res = Album::where('id', $id)->update([
-            'album_name' => $data['name'],
-            'description' => $data['description']
-        ]); */
         $album = Album::find($id);
 
         $this->authorize($album);
-        /*  if (Gate::denies('manage-album', $album)) {
-            abort(401, 'Unauthorized');
-        } */
 
         $album->album_name = $data['name'];
         $album->description = $data['description'];

@@ -23,11 +23,8 @@ use Illuminate\Http\Request;
 |
 */
 
-/* Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index')->name('home'); */
 
 Route::get('welcome/{name?}/{lastname?}/{age?}', 'WelcomeController@welcome'
-    //  return view('Welcome');
 )->where([
     'name' => '[a-zA-Z]+',
     'lastname' => '[a-zA-Z]+',
@@ -39,8 +36,6 @@ Route::get('/users', function () {
 });
 
 
-
-//'verified'
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
     /*
@@ -52,11 +47,7 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     |
     */
     Route::get('/', 'AlbumsController@index')->name('albums');
-    // Route::get('/home', 'AlbumsController@index')->name('albums');
     Route::get('/albums', 'AlbumsController@index')->name('albums');
-    /* Route::get('/photos', function () {
-        return Photo::all();
-    }); */
     Route::get('/albums/{album}', 'AlbumsController@show')->where('album', '[0-9]+')->middleware('can:view,album');
     Route::get('/albums/{id}/edit', 'AlbumsController@edit')->name('album.edit')->where('id', '[0-9]+');
     Route::delete('/albums/{album}', 'AlbumsController@delete')->name('album.delete')->where('id', '[0-9]+');
@@ -166,12 +157,3 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-/* Route::get('testMail', function () {
-    $user = User::get()->first();
-    Mail::to('solfa_90@hotmail.it')->send(new TestMd($user));
-});
-
-Route::get('testEvent', function () {
-    $album = Album::get()->first();
-    event(new NewAlbumCreated($album));
-}); */

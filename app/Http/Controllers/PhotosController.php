@@ -23,7 +23,6 @@ class PhotosController extends Controller
         'album_id' => 'required|integer|exists:albums,id',
         'name' => 'required',
         'description' => 'required',
-        //'img_path' => 'required|image'
     ];
 
     protected $messages = [
@@ -66,7 +65,6 @@ class PhotosController extends Controller
     public function store(Request $req)
     {
         Validator::make($req->all(), $this->roles, $this->messages)->validate();
-        //$req->validate($this->roles);
 
         $photo = new Photo();
 
@@ -105,8 +103,6 @@ class PhotosController extends Controller
     {
         $albums = $this->getAlbums();
 
-        //$photo = Photo::with('album')->find($photo); se non faccio il type hinting 
-        //uso la Relationship stabilita in Photo Model. chiamo il metodo come fosse una proprietà
         $album = $photo->album;
 
         return view('images_views.editimage', ['photo' => $photo, 'album' => $album, 'albums' => $albums]);
@@ -122,9 +118,7 @@ class PhotosController extends Controller
     public function update(Request $req, Photo $photo)
     {
         Validator::make($req->all(), $this->roles, $this->messages)->validate();
-        //$req->validate($this->roles);
 
-        //dd($req->all());
         $photo->name = $req->input('name');
         $photo->description = $req->input('description');
         $photo->album_id = $req->input('album_id');
@@ -140,7 +134,6 @@ class PhotosController extends Controller
         $message = $res ? 'Photo ' . $photo->id . ' updated' : 'Photo ' . $photo->id . ' not update';
         session()->flash('message', $message);
 
-        //return redirect()->route('photos.index');
         return redirect()->route('album.getimages', $photo->album_id);
     }
 
@@ -152,8 +145,6 @@ class PhotosController extends Controller
      */
     public function destroy(Photo $photo)
     {
-        //return Photo::destroy($id);
-
         $disk = config('filesystem.default');
         $thumNail = $photo->img_path;
 
@@ -182,7 +173,6 @@ class PhotosController extends Controller
         }
 
         $extension = $req->file('img_path')->extension();
-        //$imgName = preg_replace('@[a-z0-9]i@', '_', $photo->name);
 
         $path = $file->storeAs(env('IMG_DIR') . '/albumID' . $photo->album_id, $photo->id ? $photo->id : $photo->name . '-' . $req->name . '.' . $extension);
         $photo->img_path = $path;

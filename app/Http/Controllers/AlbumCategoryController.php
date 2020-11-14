@@ -15,13 +15,7 @@ class AlbumCategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   // MODO 1
-        /* $categories = AlbumCategory::where('user_id', Auth::id())->orWhere('user_id', 0)->withCount('albums')
-            ->orderByDesc('id')->latest()->paginate(env('RECORD_PER_PAGE')); */
-        // MODO 2
-        /*$categories = Auth::user()->albumCategories()->withCount('albums')
-            ->orderByDesc('id')->latest()->paginate(env('RECORD_PER_PAGE')); */
-
+    {  
         $categories = AlbumCategory::getCategoriesByUserId(Auth::user())->paginate(env('RECORD_PER_PAGE'));
         $category = new AlbumCategory();
         return view('categories.index', ['categories' => $categories, 'category' => $category]);
@@ -35,7 +29,7 @@ class AlbumCategoryController extends Controller
     public function create()
     {
         $category = new AlbumCategory();
-        // dd($category);
+  
         return view('categories.managecategory')->with('category', $category);
     }
 
@@ -118,7 +112,7 @@ class AlbumCategoryController extends Controller
      */
     public function destroy(AlbumCategory $category, Request $req)
     {
-        //dd($category);
+     
         $res = $category->delete();
         if ($req->expectsJson()) {
             return [

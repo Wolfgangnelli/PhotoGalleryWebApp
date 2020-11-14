@@ -27,10 +27,6 @@ class PageController extends Controller
 
     public function about()
     {
-        // $view = app('view');
-        // return $view->make('about');
-
-        // return View::make('about');
 
         return view('about');
     }
@@ -67,8 +63,4 @@ class PageController extends Controller
         return view('staffb', compact('title', 'staff'));
     }
 
-    /* public function blog()
-    {
-        return view('blog');
-    } */
 }
